@@ -1,0 +1,39 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}Delete {{product}}{% endblock %}
+{% block body %}
+<div class="card card-body">
+    <div class="box-element col-lg-12">
+        <div class="cart-row">
+            <div style="flex:2"></div>
+            <div style="flex:2"><strong>Product</strong></div>
+            <div style="flex:2"><strong>Category</strong></div>
+            <div style="flex:2"><strong>Tags</strong></div>
+            <div style="flex:1"><strong>Price</strong></div>
+        </div>
+        <div class="cart-row">
+            <div style="flex:2;"><img class="row-image" src="{{ product.imageURL }}"></div>
+            <div style="flex:2"><p>{{ product.name }}</p></div>
+            <div style="flex:2"><p>{{ product.category }}</p></div>
+            <div style="flex:2">
+                {% for tag in product.tag.all %}
+                    <span>{{tag}}</span>
+                {% endfor %}
+            </div>
+            <div style="flex:1"><p>${{ product.price }}</p></div>
+        </div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card card-body">
+			<p>Are you sure you want to delete "{{product.name}}"?</p>
+			<form action="{% url 'staff:delete-product' product.id  %}" method="POST">
+				{% csrf_token %}
+				<a class="btn btn-warning" href="{% url 'staff:products' %}">Cancel</a>
+				<input class="btn btn-danger" type="submit" value="Confirm">
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

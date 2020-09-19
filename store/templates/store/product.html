@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="col-lg-3">
+    <div class="box-element product">
+        <img class="thumbnail" src="{{ product.imageURL }}">
+        <div class="box-element product">
+            <h6>
+                <strong>{{ product.name }}</strong>
+                {% if request.user.is_authenticated %}
+                    {% if product.in_fav %}
+                        <button style="margin-top: 5px; border:none; float: right; background-color: white;" data-product="{{ product.id }}" data-action="delete" class="fav">
+                            <span>&#10084;&#10003;</span>
+                        </button> 
+                    {% else %}  
+                        <button  style="margin-top: 5px; border:none; float: right; background-color: white;" data-action="add" data-product="{{ product.id }}" class="add-btn fav">
+                            <span>&#10084;</span>
+                        </button> 
+                    {% endif %}
+                {% endif %}
+            </h6>
+            
+            <small><strong>Category: </strong><a href="{% url 'store:category_products' product.category.id %}">{{ product.category }}</a></small>
+            <hr>
+            <a class="btn btn-outline-success" href="{% url 'store:product_details' product.id %}">View</a>
+            <h4 style="display: inline-block; float: right"><strong>${{ product.price }}</strong></h4>
+            <br>
+            {% if product.in_cart %}
+                <li data-product="{{ product.id }}" data-action="delete" style="margin-top: 5px;" class="btn btn-outline-danger add-btn update-cart">
+                    <small>Remove from Cart</small>
+                </li>
+                <small>({{ itemNumber }} in <a href="{% url 'store:cart' %}">cart</a>)</small>
+            {% else %}
+                <button data-product="{{ product.id }}" data-action="add" style="margin-top: 5px;" class="btn btn-outline-secondary add-btn update-cart">
+                    <img  style="margin-left: 0;"id="cart-icon" src="{% static 'images/cart.png' %}">
+                    <small>Add to Cart</small>
+                </button> 
+            {% endif %} 
+        </div>
+    </div>
+</div>

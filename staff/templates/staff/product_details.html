@@ -1,0 +1,67 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+
+{% block title %}{{ product }}{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'staff/js/product_pics_zoom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'staff/js/product_pics_slider.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div id="product-detail-wrapper"> 
+        <div class="product-detail-column">
+            <div id="img-container">
+                <div id="lens"><img id="zoom" src="{% static 'staff/images/zoom.jpg' %}"></div>
+                <img id="featured" src="{{ product.imageURL }}">
+            </div>
+            <div id="slide-wrapper">
+                <img id="slideLeft" class="arrow" src="{% static 'staff/images/arrow-left.png' %}">
+                <div id="slider">
+                    <img class="thumbnail-product-detail" src="{{ product.imageURL }}">
+                    {% for image in product.image_set.all %}
+                        <img class="thumbnail-product-detail" src="{{image.imageURL}}">
+                    {% endfor %}
+                </div>
+                <img id="slideRight" class="arrow" src="{% static 'staff/images/arrow-right.png' %}">
+            </div>
+        </div>
+        <div class="product-detail-column"> 
+            <h1>{{ product }}</h1>
+                <hr>
+                <h3>${{ product.price }}</h3>
+
+                <p>{{ product.description }}</p>
+                                
+        </div>
+
+        <div class="product-detail-column"> 
+            <h1>Reviews</h1>
+                <hr>
+                <h6>Category: {{ product.category }}</h6>
+                <h6>Tags: 
+                    <small>
+                        {% for tag in product.tag_set.all %}
+                            {{ tag }}
+                        {% endfor %}
+                    </small>
+                </h6>
+                <h6>Date Posted: {{ product.date_created }}</h6>			
+        </div>
+        <div class="product-detail-column"> 
+            <h1>Details</h1>
+                <hr>
+                <h6><strong>Category: </strong><a href="{% url 'store:category_products' product.category.id %}">{{ product.category }}</a></h6>
+                <h6><strong>Tags: </strong>
+                    <small>
+                        {% for tag in product.tag.all %}
+                            <a href="{% url 'store:tag_products' tag.id %}">{{ tag }}</a>
+                        {% endfor %}
+                    </small>
+                </h6>
+                <h6><strong>Date Posted:</strong> {{ product.date_created|date:"F d, Y" }}</h6>			
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}Cancel Order ({{order.id}}){% endblock %}
+{% block body %}
+
+
+<div class="row">
+	<div class="col-md-12">
+        <div class="card card-body">
+            <table class="table table-sm">
+                <tr>
+                    <td>
+                            <strong>
+                                (
+                                    <i>Order: </i>{{ order.id }}
+                                    |
+                                    <i>Customer: </i>{{ order.customer }}
+                                )
+                            </strong>
+                            <br>
+                            <strong>Date ordered:</strong> {{order.date_ordered|date:"F d, Y"}}
+                    </td>
+                    <td>
+						<p>Are you sure you want to cancel <strong>"Order: {{order.id}}"</strong>?</p>
+						<form action="{% url 'staff:delete-order' order.id  %}" method="POST">
+							{% csrf_token %}
+							<a class="btn btn-warning" href="{% url 'staff:index' %}">Cancel</a>
+							<input class="btn btn-danger" type="submit" value="Confirm">
+						</form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Product</th>
+                </tr>
+                {% for item in order.get_orderItems %}
+                    <tr>
+                        <td>{{item.product}} (x{{item.quantity}})</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

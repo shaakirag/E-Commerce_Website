@@ -1,0 +1,23 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}Create a Product{% endblock %}
+{% block body %}
+
+    <div style="margin: auto" class="card w-50">
+        <div class="card card-body">
+            <div class="form-group">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        {{form.as_p}}
+                        <hr>
+                    {% endfor %}
+                    <a class="btn btn-warning" href="{% url 'staff:products' %}">Cancel</a>
+                    <input class="btn btn-dark" type="submit" value="Confirm">
+                </form>
+            </div>
+        </div>
+    </div>   
+
+{% endblock %}

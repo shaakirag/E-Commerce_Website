@@ -1,0 +1,72 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}All Products{% endblock %}
+{% block body %}
+    {% load staff_extras %}
+
+    <div class="row">
+        <div class="col-md">
+            <div class="col">
+                <details>
+                    <summary>Filter Products</summary>
+                    <hr>
+                    <div style="border: none;" class="card card-body">
+                        <form method="get">
+                            {{filterProduct.form.as_p}}
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                    </div>
+                </details>
+            </div>
+            <hr>
+            <div class="card card-body">
+                <h5>Products</h5>
+            </div>
+            <div class="card card-body">
+                <div class="box-element col-lg-12">
+                    <div class="cart-row">
+                        <div style="flex:2"><strong>Product</strong></div>
+                        <div style="flex:2"><strong>Category</strong></div>
+                        <div style="flex:2"><strong>Tags</strong></div>
+                        <div style="flex:1"><strong>Price</strong></div>
+                        <div style="flex:3"></div>
+                    </div>
+                    {% for product in product_page_obj %}
+                        <div class="cart-row">
+                            <div style="flex:2; margin-right: 1em;"><p><a href="{% url 'staff:product-details' product.id %}">{{ product.name }}</a></p></div>
+                            <div style="flex:2; margin-right: 1em;"><p>{{ product.category }}</p></div>
+                            <div style="flex:2; margin-right: 1em;">
+                                {% for tag in product.tag.all %}
+                                    <span>{{tag}}</span>
+                                {% endfor %}
+                            </div>
+                            <div style="flex:1"><p>${{ product.price }}</p></div>
+                            <div style="flex:3">
+                                <a class="btn btn-sm btn-warning" href="{% url 'staff:add-images' product.id %}">Add/Remove Images</a>
+                                <a class="btn btn-sm btn-info" href="{% url 'staff:update-product' product.id %}">Update</a>
+						        <a class="btn btn-sm btn-danger" href="{% url 'staff:delete-product' product.id %}">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if product_page_obj.has_previous %}
+                        <a href="{% filtered_pagination 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% filtered_pagination product_page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ product_page_obj.number }} of {{ product_page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if product_page_obj.has_next %}
+                        <a href="{% filtered_pagination product_page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% filtered_pagination product_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

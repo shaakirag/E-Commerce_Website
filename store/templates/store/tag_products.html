@@ -1,0 +1,35 @@
+{% extends "store/layout.html" %}
+{% load static %}
+
+{% block title %}Tag: {{ tag }}{% endblock %}
+
+{% block body %}
+	{% load store_extras %}
+
+	<h1 class="category-title">Products in: "{{ tag }}" </h1>
+	{% include 'store/filter.html' %}
+	<div class="row">
+		{% for product in product_page_obj %}
+			{% include 'store/product.html' %}
+		{% endfor %}
+	</div>
+	{% if product_page_obj %}
+		<div class="pagination">
+			<span class="step-links">
+				{% if product_page_obj.has_previous %}
+					<a href="{% filtered_pagination 1 'page' request.GET.urlencode %}">&laquo; First</a>
+					<a href="{% filtered_pagination product_page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+				{% endif %}
+
+				<span class="current">
+					Page {{ product_page_obj.number }} of {{ product_page_obj.paginator.num_pages }}.
+				</span>
+
+				{% if product_page_obj.has_next %}
+					<a href="{% filtered_pagination product_page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+					<a href="{% filtered_pagination product_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+				{% endif %}
+			</span>
+		</div>
+	{% endif %}
+{% endblock %}

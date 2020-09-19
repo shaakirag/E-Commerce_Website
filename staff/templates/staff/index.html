@@ -1,0 +1,118 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}Orders{% endblock %}
+{% block body %}
+    {% load staff_extras %}
+
+    <div class="row">
+        <div class="col-lg-3">
+    
+            <div class="card text-center text-white  mb-3" id="total-orders">
+                <div class="card-header">
+                    <h5 class="card-title">Total Orders</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{total_orders}}</h3>
+                </div>
+            </div>
+    
+            <div class="card text-center text-white  mb-3" id="orders-delivered">
+                <div class="card-header">
+                    <h5 class="card-title">Orders Delivered</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{delivered}}</h3>
+                </div>
+            </div>
+            
+            <div class="card text-center text-white  mb-3" id="orders-pending">
+                <div class="card-header">
+                    <h5 class="card-title">Orders Pending</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{pending}}</h3>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="col-lg-9">
+            <h5>ORDERS</h5>
+            <hr>
+            <div class="col">
+                <details>
+                    <summary>Search by order</summary>
+                    <hr>
+                    <div style="border: none;" class="card card-body">
+                        <form method="get">
+                            {{filterOrder.form.as_p}}
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                    </div>
+                </details>
+            </div>
+            <hr>
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Product</th>
+                        <th>Date Orderd</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    {% for order in order_page_obj %}
+                        <tr style="background-color:#FFE4E1;">
+                            <td>
+                                <small>
+                                    <strong>                                 
+                                        <i>Order: </i>{{ order.id }}
+                                        |
+                                        {% if not order.customer.user %}
+                                            <i>Guest Customer: </i><a href="{% url 'staff:guest-profile' order.customer.id %}">{{ order.customer }}</a>
+                                        {% elif not order.customer.user.is_staff %}
+                                            <i>Registered Customer: </i><a href="{% url 'staff:registered-profile' order.customer.user.id %}">{{ order.customer }}</a>
+                                        {% else %}
+                                            <i>Staff: </i>{{ order.customer }} 
+                                        {% endif %}
+                                    </strong>
+                                </small>
+                            </td>
+                            <td>{{order.date_ordered|date:"F d, Y"}}</td>
+                            <td>{{order.status}}</td>
+                            <td><a class="btn btn-sm btn-info" href="{% url 'staff:update-order' order.id %}">Update</a></td>
+                            <td><a class="btn btn-sm btn-danger" href="{% url 'staff:delete-order' order.id %}">Cancel</a></td>
+                        </tr>
+                        {% for item in order.get_orderItems %}
+                            <tr>
+                                <td>{{item.product}} (x{{item.quantity}})</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+            
+                </table>
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if order_page_obj.has_previous %}
+                        <a href="{% filtered_pagination 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% filtered_pagination order_page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ order_page_obj.number }} of {{ order_page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if order_page_obj.has_next %}
+                        <a href="{% filtered_pagination order_page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% filtered_pagination order_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

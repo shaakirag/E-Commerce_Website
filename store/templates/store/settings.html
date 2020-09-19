@@ -1,0 +1,58 @@
+{% extends "store/layout.html" %}
+{% load static %}
+{% block head %}
+    <style>
+        .profile-pic{
+            max-width: 200px;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Settings ({{ user.username }}){% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <div style="position: sticky; position: -webkit-sticky; top:0;" class="col-md-3">
+            <div class="card card-body">
+                <a class="btn btn-warning" href="{% url 'store:profile' user.id %}"> &#8592; Back to Profile</a>
+                <hr>
+                <h3 style="text-align: center">Account Settings</h3>
+                <hr>
+                <img class="profile-pic" src="{{ user.customer.imageURL }}" >
+            
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card card-body">
+                <h5>Personal and Contact Information</h5>
+                <hr>
+                {% for message in messages %}
+                    <p 
+                        style="background-color: #FFA07A;
+                        color: #fff;
+                        padding: 10px;
+                        margin-top: 10px;">
+                            {{message}}
+                    </p>
+                {% endfor %}
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Username:</label>
+                        <div>
+                            {{ formU.username }}
+                        </div>
+                        <small class="form-text text-muted">Username cannot be changed.</small>
+                    </div>
+                    <a href="{% url 'store:password-change' user.id %}">Change Password</a>
+                    <br><br>
+                    {{form.as_p}}
+                <input class="btn btn-info" type="submit" value="Update Information">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

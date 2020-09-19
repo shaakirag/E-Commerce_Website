@@ -1,0 +1,69 @@
+{% extends "store/layout.html" %}
+{% load static %}
+
+{% block title %}Favourites{% endblock %}
+
+{% block body %}
+	{% load store_extras %}
+
+	<h1 class="category-title">Favourites</h1>
+	<hr>    
+	<div class="row">
+		{% for product in product_page_obj %}
+			<div class="col-lg-3">
+				<div class="box-element product">
+					<img class="thumbnail" src="{{ product.product.imageURL }}">
+					<div class="box-element product">
+						<h6>
+							<strong>{{ product.product.name }}</strong>  
+						</h6>
+						<button style="margin-top: 5px; border:none; float: right; background-color: white;" data-product="{{ product.product.id }}" data-action="delete" class="fav">
+                            <span>&#10084;&#x2717;</span>
+                        </button>
+						<small><strong>Category: </strong><a href="{% url 'store:category_products' product.product.category.id %}">{{ product.product.category }}</a></small>
+						<hr>
+						<a class="btn btn-outline-success" href="{% url 'store:product_details' product.product.id %}">View</a>
+						<h4 style="display: inline-block; float: right"><strong>${{ product.product.price }}</strong></h4>
+						<br>
+						{% if product.product.in_cart %}
+							<li data-product="{{ product.product.id }}" data-action="delete" style="margin-top: 5px;" class="btn btn-outline-danger add-btn update-cart">
+								<small>Remove from Cart</small>
+							</li>
+							<small>({{ itemNumber }} in <a href="{% url 'store:cart' %}">cart</a>)</small>
+						{% else %}
+							<button data-product="{{ product.product.id }}" data-action="add" style="margin-top: 5px;" class="btn btn-outline-secondary add-btn update-cart">
+								<img  style="margin-left: 0;"id="cart-icon" src="{% static 'images/cart.png' %}">
+								<small>Add to Cart</small>
+							</button> 
+						{% endif %} 
+					</div>
+				</div>
+			</div>		
+		{% empty %}
+		<div style="margin:auto; margin-top: 10%;" class="card">
+			<div class="card-body">
+				No favourites :(
+			</div>
+		  </div>
+		{% endfor %}
+	</div>
+	{% if product_page_obj %}
+	<div class="pagination">
+		<span class="step-links">
+			{% if product_page_obj.has_previous %}
+				<a href="{% filtered_pagination 1 'page' request.GET.urlencode %}">&laquo; First</a>
+				<a href="{% filtered_pagination product_page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+			{% endif %}
+
+			<span class="current">
+				Page {{ product_page_obj.number }} of {{ product_page_obj.paginator.num_pages }}.
+			</span>
+
+			{% if product_page_obj.has_next %}
+				<a href="{% filtered_pagination product_page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+				<a href="{% filtered_pagination product_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+			{% endif %}
+		</span>
+	</div>
+	{% endif %}
+{% endblock %}

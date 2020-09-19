@@ -1,0 +1,30 @@
+{% extends "store/layout.html" %}
+{% load static %}
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+<h1 class="category-title">Tags</h1>
+<hr>
+<div class="col">
+    <details>
+        <summary>Filter Tags</summary>
+        <hr>
+        <div style="border: none;" class="card card-body">
+            <form method="get">
+                {{filterTag.form}}
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        </div>
+    </details>
+</div>
+<hr>
+<div class="row">
+    {% for tag in tags %}
+        <div class="col-lg-2">
+            <a href="{% url 'store:tag_products' tag.id %}" class="btn btn-secondary btn-lg btn-block">{{ tag }}</a>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

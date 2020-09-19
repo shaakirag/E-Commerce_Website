@@ -1,0 +1,30 @@
+{% extends "store/layout.html" %}
+{% load static %}
+
+{% block title %}Categories{% endblock %}
+
+{% block body %}
+    <h1 class="category-title">Categories</h1>
+    <hr>    
+    <div class="col">
+        <details>
+            <summary>Filter Categories</summary>
+            <hr>
+            <div style="border: none;" class="card card-body">
+                <form method="get">
+                    {{filterCategory.form}}
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            </div>
+        </details>
+    </div>
+    <hr>
+    <div class="row">
+        {% for category in categories %}
+            <div class="col-lg-6">
+                <a href="{% url 'store:category_products' category.id %}" class="btn btn-secondary btn-lg btn-block">{{ category }}</a>
+            </div>  
+        {% endfor %}
+    </div>
+
+{% endblock %}

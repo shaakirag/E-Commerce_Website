@@ -1,0 +1,132 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}{{ guest.first_name }} {{ guest.last_name }}{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body">
+            <h5>Guest User: "{{ guest.first_name }} {{ guest.last_name }}"</h5>
+            <a class="btn btn-outline-info  btn-sm btn-block" href="">Update User</a>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card-body">
+                <details>
+                    <summary>Personal Information</summary>
+                    <hr>
+                    <p class="personal-info"><strong>First name: </strong>{{ guest.first_name }}</p>
+                    <p class="personal-info"><strong>Last name: </strong>{{ guest.last_name }}</p>
+                </details>
+            </div>
+        </div>
+        {% if count != 0 %}
+            <div class="col-md">
+                <div class="card card-body">
+                    <details>
+                        <summary>Shipping Information</summary>
+                        <hr>
+                        <p class="personal-info"><strong>Country: </strong>{{ address.country }}</p>
+                        <p class="personal-info"><strong>Province/State: </strong>{{ address.province }}</p>
+                        <p class="personal-info"><strong>City: </strong>{{ address.city }}</p>
+                        <p class="personal-info"><strong>Address: </strong>{{ address.address }}</p>
+                        <p class="personal-info"><strong>Zipcode: </strong>{{ address.zipcode }}</p>
+                    </details>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md">
+                <div class="card card-body">
+                    <details>
+                        <summary>Shipping Information (for last order)</summary>
+                        <hr>
+                        <p class="personal-info">{{ guest.first_name }} has not placed an order yet!</p>
+                    </details>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-md">
+            <div class="card card-body">
+                <details>
+                    <summary>Contact Information</summary>
+                    <hr>
+                    <p class="personal-info"><strong>E-mail: </strong>{{guest.email}}</p>
+                    <p class="personal-info"><strong>Phone: </strong>{{guest.phone}}</p>
+                </details>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body">
+                <h5>Total Orders: {{ count }}</h5>
+                {% if count != 0 %}
+                    <br>
+                    <div class="col">
+                        <details>
+                            <summary>Search by order</summary>
+                            <hr>
+                            <div style="border: none;" class="card card-body">
+                                <form method="get">
+                                    {{filterOrderC.form.as_p}}
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </form>
+                            </div>
+                        </details>
+                    </div>
+                    <!--<div class="col">
+                        <details>
+                            <summary>Search by order items</summary>
+                            <hr>
+                            <div style="border: none;" class="card card-body">
+                                <form method="get">
+                                    {{filterItem.form.as_p}}
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </form>
+                            </div>
+                        </details>
+                    </div>-->
+                    <div class="col-md">
+                        <div style="border: none;" class="card card-body">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Date Orderd</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+
+                                {% for order in orders %}
+                                <tr style="background-color:#FFE4E1;">
+                                    <td>
+                                        <small>
+                                            <strong>                                 
+                                                <i>Order: </i>{{ order.id }}
+                                            </strong>
+                                        </small>
+                                    </td>
+                                    <td></td>
+                                    <td>{{order.date_ordered|date:"F d, Y"}}</td>
+                                    <td>{{order.status}}</td>
+                                    <td><a class="btn btn-sm btn-info" href="{% url 'staff:update-order' order.id %}">Update</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="{% url 'staff:delete-order' order.id %}">Cancel</a></td>
+                                </tr>
+                                {% for item in order.get_orderItems %}
+                                    <tr>
+                                        <td>{{item.product}} (x{{item.quantity}})</td>
+                                        <td>{{item.product.category}}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+     
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'staff/layout.html' %}
+{% load static %}
+{% block title %}Customers{% endblock %}
+{% block body %}
+    {% load staff_extras %}
+    <div class="col">
+        <details>
+            <summary>Filter Users</summary>
+            <hr>
+            <div style="border: none;" class="card card-body">
+                <form method="get">
+                    {{filterRegistered.form.as_p}}
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            </div>
+        </details>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Registered Users:</h5>
+            <hr>
+            <div class="card card-body">
+             
+                <table class="table table-sm">
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th></th>
+                        <th>E-mail</th>
+                    </tr>
+                    {% for r in registered_page_obj %}
+                        <tr>
+                            <td><a class="btn btn-sm btn-info" href="{% url 'staff:registered-profile' r.id %}">View</a></td>              
+                            <td>{{r.first_name}}</td>
+                            <td>{{r.last_name}}</td>
+                            <td>{{r.email}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <h5>Guest Users:</h5>
+            <hr>
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th></th>
+                        <th>E-mail</th>
+                    </tr>
+                    {% for g in guest_page_obj %}
+                        {% if not g.user %}
+                            <tr>
+                                <td><a class="btn btn-sm btn-info" href="{% url 'staff:guest-profile' g.id %}">View</a></td>              
+                                <td>{{g.first_name}}</td>
+                                <td>{{g.last_name}}</td>
+                                <td>{{g.email}}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if registered_page_obj.has_previous %}
+                <a href="{% filtered_pagination 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                <a href="{% filtered_pagination registered_page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ registered_page_obj.number }} of {{ registered_page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if registered_page_obj.has_next %}
+                <a href="{% filtered_pagination registered_page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                <a href="{% filtered_pagination registered_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+            {% endif %}
+        </span>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Staff:</h5>
+            <hr>
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>E-mail</th>
+                    </tr>
+                    {% for s in staff %}
+                        <tr>
+                            <td>{{ s.username }}</td>
+                            <td>{{ s.first_name }}</td>
+                            <td>{{ s.last_name }}</td>
+                            <td>{{ s.email }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
