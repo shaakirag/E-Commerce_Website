@@ -1,6 +1,8 @@
 # E-Commerce Website with Customer and Order Management 
 
-E-Commerce website with customer and order management
+E-Commerce website with customer and order management.
+
+Programmed using the Python framework Django, Javascript, HTML, CSS.
 
 **To run the website:**
 
