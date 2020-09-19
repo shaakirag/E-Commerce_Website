@@ -24,3 +24,6 @@ Programmed using the Python framework Django, Javascript, HTML, CSS.
 
 5. Click on the link in the terminal
 
+**E-Commerce Website:**
+
+1. 
